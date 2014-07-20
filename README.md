@@ -9,7 +9,7 @@ Download the script from this repo, or just run `bower install hammer-touchemula
 
 ## How to use
 Include the javascript file, and call the `Emulator()` function before any other libraries that do something with the 
-touch input. 
+touch input. It will set some fake properties to spoof the touch detection of some libraries, and triggers `touchstart`, `touchmove` and `touchend` events on the mouse target.
  
 ````html
 <script src="../../touch-emulator.js"></script>
