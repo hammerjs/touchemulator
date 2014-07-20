@@ -12,10 +12,15 @@ touch input.
 <script> TouchEmulator(); </script>
 ````
 
-````html
-<script src="modernizr.js"></script>
-<script> 
-	Modernizr.touch; // true! we tricked Modernizr.
-</script>
-````
+Press the `shift` key to enable multi-touch!
+
+## Config
+Little configuration is possible (and needed).
+
+#### TouchEmulator.template = Function(touch)
+Change the css properties of the rendered touches.
+
+#### TouchEmulator.multiTouchOffset = 75
+The distance between the two touch points when entering the *multi-touch zone*.
+
 

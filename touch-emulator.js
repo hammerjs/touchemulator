@@ -8,7 +8,7 @@
      * Simple trick to fake touch event support
      * this is enough for most libraries like Modernizr and Hammer
      */
-    function fakeTouchSupport(el) {
+    function fakeTouchSupport() {
         if (!window.ontouchstart) {
             window.ontouchstart = null;
             window.ontouchmove = null;
@@ -257,8 +257,6 @@
         setMouseEvents();
         setTouchEvents();
     }
-
-    TouchEmulator.fakeSupport = fakeTouchSupport;
 
     // start distance when entering the multitouch mode
     TouchEmulator.multiTouchOffset = 75;
