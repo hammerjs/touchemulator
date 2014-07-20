@@ -1,4 +1,4 @@
-Emulator
+Touch Emulator
 ========
 
 Emulate touch input on your desktop. Tries to fire touch events as 
