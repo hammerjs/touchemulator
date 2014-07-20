@@ -9,7 +9,7 @@
      * this is enough for most libraries like Modernizr and Hammer
      */
     function fakeTouchSupport() {
-        if (!window.ontouchstart) {
+        if (!("ontouchstart" in window)) {
             window.ontouchstart = null;
             window.ontouchmove = null;
             window.ontouchcancel = null;
@@ -27,7 +27,7 @@
      * @returns {boolean}
      */
     function hasTouchSupport() {
-        return window.ontouchstart || // touch events
+        return ("ontouchstart" in window) || // touch events
                (window.Modernizr && window.Modernizr.touch) || // modernizr
                (navigator.msMaxTouchPoints || navigator.maxTouchPoints) > 2; // pointer events
     }
