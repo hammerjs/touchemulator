@@ -27,7 +27,7 @@ document.body.addEventListener('touchend', log, false);
 ````
 
 ## Config
-Little configuration is possible (and needed).
+Little configuration is possible...
 
 #### TouchEmulator.template = Function(touch)
 Change the css properties of the rendered touches.
