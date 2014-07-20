@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+</head>
+<body>
+
+
+    <p>To test it on the Google Maps view, you should open your
+        <a href="https://developer.chrome.com/devtools/docs/mobile-emulation#emulate-touch-events">
+        Inspector and emulate a touch-device (by spoofing the user agent).</a>.</p>
+
+    <p>This is because the userAgent can't be overwritten and Google uses this to identify if there's any touch
+        support.</p>
+
+    <div id="maps" style="height: 500px; margin-bottom: 20px; -webkit-user-select: none;"></div>
+
+
+    <script src="../../touch-emulator.js"></script>
+    <script> TouchEmulator(); </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script>
+
+        var map = new google.maps.Map(document.getElementById('maps'), {
+            zoom: 14,
+            center: new google.maps.LatLng(51.98, 5.91)
+        });
+
+    </script>
+
+</body>
+</html>
