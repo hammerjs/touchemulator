@@ -38,20 +38,64 @@
     }
 
     /**
+     * create an touch point
+     * @constructor
+     * @param target
+     * @param identifier
+     * @param pos
+     * @param deltaX
+     * @param deltaY
+     * @returns {Object} touchPoint
+     */
+    function Touch(target, identifier, pos, deltaX, deltaY) {
+        deltaX = deltaX || 0;
+        deltaY = deltaY || 0;
+
+        this.identifier = identifier;
+        this.target = target;
+        this.clientX = pos.clientX + deltaX;
+        this.clientY = pos.clientY + deltaY;
+        this.screenX = pos.screenX + deltaX;
+        this.screenY = pos.screenY + deltaY;
+        this.pageX = pos.pageX + deltaX;
+        this.pageY = pos.pageY + deltaY;
+    }
+
+    /**
+     * create empty touchlist with the methods
+     * @constructor
+     * @returns touchList
+     */
+    function TouchList() {
+        var touchList = [];
+
+        touchList.item = function(index) {
+            return this[index] || null;
+        };
+
+        // specified by Mozilla
+        touchList.identifiedTouch = function(id) {
+            return this[id + 1] || null;
+        };
+
+        return touchList;
+    }
+
+
+    /**
      * Simple trick to fake touch event support
      * this is enough for most libraries like Modernizr and Hammer
      */
     function fakeTouchSupport() {
-        if (!("ontouchstart" in window)) {
-            window.ontouchstart = null;
-            window.ontouchmove = null;
-            window.ontouchcancel = null;
-            window.ontouchend = null;
+        var objs = [window, document.documentElement];
+        var props = ['ontouchstart', 'ontouchmove', 'ontouchcancel', 'ontouchend'];
 
-            document.documentElement.ontouchstart = null;
-            document.documentElement.ontouchmove = null;
-            document.documentElement.ontouchcancel = null;
-            document.documentElement.ontouchend = null;
+        for(var o=0; o<objs.length; o++) {
+            for(var p=0; p<props.length; p++) {
+                if(objs[o] && objs[o][props[p]] == undefined) {
+                    objs[o][props[p]] = null;
+                }
+            }
         }
     }
 
@@ -63,15 +107,6 @@
         return ("ontouchstart" in window) || // touch events
                (window.Modernizr && window.Modernizr.touch) || // modernizr
                (navigator.msMaxTouchPoints || navigator.maxTouchPoints) > 2; // pointer events
-    }
-
-    /**
-     * setup mouse events on the window
-     */
-    function setMouseEvents() {
-        window.addEventListener("mousedown", onMouse('touchstart'), false);
-        window.addEventListener("mousemove", onMouse('touchmove'), false);
-        window.addEventListener("mouseup", onMouse('touchend'), false);
     }
 
     /**
@@ -145,69 +180,25 @@
     }
 
     /**
-     * create empty touchlist with the methods
-     * @constructor
-     * @returns touchlist
-     */
-    function TouchList() {
-        this.item = function(index) {
-            return this[index] || null;
-        };
-
-        // specified by Mozilla
-        this.identifiedTouch = function(id) {
-            return this[id + 1] || null;
-        };
-
-        this.length = 0;
-    }
-
-    /**
      * create a touchList based on the mouse event
      * @param mouseEv
      * @returns {TouchList}
      */
     function createTouchList(mouseEv) {
-        var touchList = document.createTouchList();
+        var touchList = new TouchList();
 
         if (isMultiTouch) {
             var f = TouchEmulator.multiTouchOffset;
             var deltaX = multiTouchStartPos.pageX - mouseEv.pageX;
             var deltaY = multiTouchStartPos.pageY - mouseEv.pageY;
 
-            touchList[0] = (new Touch(eventTarget, 1, multiTouchStartPos, (deltaX*-1) - f, (deltaY*-1) + f));
-            touchList[1] = (new Touch(eventTarget, 2, multiTouchStartPos, deltaX+f, deltaY-f));
-            touchList.length = 2;
+            touchList.push(new Touch(eventTarget, 1, multiTouchStartPos, (deltaX*-1) - f, (deltaY*-1) + f));
+            touchList.push(new Touch(eventTarget, 2, multiTouchStartPos, deltaX+f, deltaY-f));
         } else {
-            touchList[0] = (new Touch(eventTarget, 1, mouseEv, 0, 0));
-            touchList.length = 1;
+            touchList.push(new Touch(eventTarget, 1, mouseEv, 0, 0));
         }
 
         return touchList;
-    }
-
-    /**
-     * create an touch point
-     * @constructor
-     * @param target
-     * @param identifier
-     * @param position
-     * @param deltaX
-     * @param deltaY
-     * @returns {Object} touchPoint
-     */
-    function Touch(target, identifier, position, deltaX, deltaY) {
-        deltaX = deltaX || 0;
-        deltaY = deltaY || 0;
-
-        this.identifier = identifier;
-        this.target = target;
-        this.clientX = position.clientX + deltaX;
-        this.clientY = position.clientY + deltaY;
-        this.screenX = position.screenX + deltaX;
-        this.screenY = position.screenY + deltaY;
-        this.pageX = position.pageX + deltaX;
-        this.pageY = position.pageY + deltaY;
     }
 
     /**
@@ -216,14 +207,14 @@
      * @returns {TouchList}
      */
     function getActiveTouches(mouseEv, eventName) {
+        // empty list
         if (mouseEv.type == 'mouseup') {
-            return document.createTouchList();
+            return new TouchList();
         }
 
         var touchList = createTouchList(mouseEv);
         if(isMultiTouch && mouseEv.type != 'mouseup' && eventName == 'touchend') {
-            delete touchList[1];
-            touchList.length = 1;
+            touchList.splice(1, 1);
         }
         return touchList;
     }
@@ -244,23 +235,10 @@
         // no new input will be possible
         if(isMultiTouch && mouseEv.type != 'mouseup' &&
             (eventName == 'touchstart' || eventName == 'touchend')) {
-            touchList[0] = touchList[1];
-            touchList.length = 1;
+            touchList.splice(0, 1);
         }
 
         return touchList;
-    }
-
-
-    /**
-     * setup touch events on the window
-     * this means that the script is using itself!
-     */
-    function setTouchEvents() {
-        window.addEventListener("touchstart", showTouches, false);
-        window.addEventListener("touchmove", showTouches, false);
-        window.addEventListener("touchend", showTouches, false);
-        window.addEventListener("touchcancel", showTouches, false);
     }
 
     /**
@@ -306,8 +284,16 @@
         }
 
         fakeTouchSupport();
-        setMouseEvents();
-        setTouchEvents();
+
+        window.addEventListener("mousedown", onMouse('touchstart'), false);
+        window.addEventListener("mousemove", onMouse('touchmove'), false);
+        window.addEventListener("mouseup", onMouse('touchend'), false);
+
+        // it uses itself!
+        window.addEventListener("touchstart", showTouches, false);
+        window.addEventListener("touchmove", showTouches, false);
+        window.addEventListener("touchend", showTouches, false);
+        window.addEventListener("touchcancel", showTouches, false);
     }
 
     // start distance when entering the multitouch mode
