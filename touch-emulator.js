@@ -1,8 +1,41 @@
 (function(window, document, exportName, undefined) {
+    "use strict";
+
     var isMultiTouch = false;
     var multiTouchStartPos;
     var eventTarget;
     var touchElements = {};
+
+    // polyfills
+    if(!document.createTouch) {
+        document.createTouch = function(view, target, identifier, pageX, pageY, screenX, screenY, clientX, clientY) {
+            // auto set
+            if(clientX == undefined || clientY == undefined) {
+                clientX = pageX - window.pageXOffset;
+                clientY = pageY - window.pageYOffset;
+            }
+
+            return new Touch(target, identifier, {
+                pageX: pageX,
+                pageY: pageY,
+                screenX: screenX,
+                screenY: screenY,
+                clientX: clientX,
+                clientY: clientY
+            });
+        };
+    }
+
+    if(!document.createTouchList) {
+        document.createTouchList = function() {
+            var touchList = new TouchList();
+            for (var i = 0; i < arguments.length; i++) {
+                touchList[i] = arguments[i];
+            }
+            touchList.length = arguments.length;
+            return touchList;
+        };
+    }
 
     /**
      * Simple trick to fake touch event support
@@ -104,7 +137,8 @@
         touchEvent.metaKey = mouseEv.metaKey;
         touchEvent.shiftKey = mouseEv.shiftKey;
 
-        touchEvent.targetTouches = touchEvent.touches = getActiveTouches(mouseEv, eventName);
+        touchEvent.touches = getActiveTouches(mouseEv, eventName);
+        touchEvent.targetTouches = getActiveTouches(mouseEv, eventName);
         touchEvent.changedTouches = getChangedTouches(mouseEv, eventName);
 
         eventTarget.dispatchEvent(touchEvent);
@@ -112,38 +146,41 @@
 
     /**
      * create empty touchlist with the methods
-     * @returns {Array}
+     * @constructor
+     * @returns touchlist
      */
-    function createEmptyTouchList() {
-        var touchList = [];
-        touchList.item = function(index) {
-            return touchList[index];
+    function TouchList() {
+        this.item = function(index) {
+            return this[index] || null;
         };
 
         // specified by Mozilla
-        touchList.identifiedTouch = function(id) {
-            return touchList[id + 1];
+        this.identifiedTouch = function(id) {
+            return this[id + 1] || null;
         };
-        return touchList;
+
+        this.length = 0;
     }
 
     /**
      * create a touchList based on the mouse event
      * @param mouseEv
-     * @returns {Array}
+     * @returns {TouchList}
      */
     function createTouchList(mouseEv) {
-        var touchList = createEmptyTouchList();
+        var touchList = document.createTouchList();
 
         if (isMultiTouch) {
             var f = TouchEmulator.multiTouchOffset;
             var deltaX = multiTouchStartPos.pageX - mouseEv.pageX;
             var deltaY = multiTouchStartPos.pageY - mouseEv.pageY;
 
-            touchList.push(createTouchPoint(1, multiTouchStartPos, (deltaX*-1) - f, (deltaY*-1) + f));
-            touchList.push(createTouchPoint(2, multiTouchStartPos, deltaX+f, deltaY-f));
+            touchList[0] = (new Touch(eventTarget, 1, multiTouchStartPos, (deltaX*-1) - f, (deltaY*-1) + f));
+            touchList[1] = (new Touch(eventTarget, 2, multiTouchStartPos, deltaX+f, deltaY-f));
+            touchList.length = 2;
         } else {
-            touchList.push(createTouchPoint(1, mouseEv, 0, 0));
+            touchList[0] = (new Touch(eventTarget, 1, mouseEv, 0, 0));
+            touchList.length = 1;
         }
 
         return touchList;
@@ -151,38 +188,42 @@
 
     /**
      * create an touch point
+     * @constructor
+     * @param target
      * @param identifier
      * @param position
      * @param deltaX
      * @param deltaY
      * @returns {Object} touchPoint
      */
-    function createTouchPoint(identifier, position, deltaX, deltaY) {
-        return {
-            identifier: identifier,
-            target: eventTarget,
-            clientX: position.clientX + deltaX,
-            clientY: position.clientY + deltaY,
-            screenX : position.screenX + deltaX,
-            screenY: position.screenY + deltaY,
-            pageX: position.pageX + deltaX,
-            pageY: position.pageY + deltaY
-        };
+    function Touch(target, identifier, position, deltaX, deltaY) {
+        deltaX = deltaX || 0;
+        deltaY = deltaY || 0;
+
+        this.identifier = identifier;
+        this.target = target;
+        this.clientX = position.clientX + deltaX;
+        this.clientY = position.clientY + deltaY;
+        this.screenX = position.screenX + deltaX;
+        this.screenY = position.screenY + deltaY;
+        this.pageX = position.pageX + deltaX;
+        this.pageY = position.pageY + deltaY;
     }
 
     /**
      * receive all active touches
      * @param mouseEv
-     * @returns {Array}
+     * @returns {TouchList}
      */
     function getActiveTouches(mouseEv, eventName) {
         if (mouseEv.type == 'mouseup') {
-            return createEmptyTouchList();
+            return document.createTouchList();
         }
 
         var touchList = createTouchList(mouseEv);
         if(isMultiTouch && mouseEv.type != 'mouseup' && eventName == 'touchend') {
-            touchList.splice(1,1);
+            delete touchList[1];
+            touchList.length = 1;
         }
         return touchList;
     }
@@ -191,7 +232,7 @@
      * receive a filtered set of touches with only the changed pointers
      * @param mouseEv
      * @param eventName
-     * @returns {Array}
+     * @returns {TouchList}
      */
     function getChangedTouches(mouseEv, eventName) {
         var touchList = createTouchList(mouseEv);
@@ -203,7 +244,8 @@
         // no new input will be possible
         if(isMultiTouch && mouseEv.type != 'mouseup' &&
             (eventName == 'touchstart' || eventName == 'touchend')) {
-            touchList.splice(0,1);
+            touchList[0] = touchList[1];
+            touchList.length = 1;
         }
 
         return touchList;
@@ -289,6 +331,8 @@
             borderRadius: '100%',
             height: size + 'px',
             width: size + 'px',
+            padding: 0,
+            margin: 0,
             display: 'block',
             overflow: 'hidden',
             pointerEvents: 'none',

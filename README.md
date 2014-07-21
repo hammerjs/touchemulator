@@ -29,6 +29,14 @@ document.body.addEventListener('touchmove', log, false);
 document.body.addEventListener('touchend', log, false);
 ````
 
+Also, the script includes polyfills for `document.createTouch` and `document.createTouchList`.
+
+The script has been tested with the w3c web platform tests and passes almost all except;
+- `assert_true: The touchstart event must be dispatched before any mouse events. (If this fails, 
+it might mean that the user agent does not implement W3C touch events at all.) expected true got false`
+- `assert_true: event is a TouchEvent event expected true got false`
+- `assert_equals: attribute of type TouchList expected "[object TouchList]" but got "[object Object]"`
+- `assert_equals: attribute of type TouchList expected "[object Touch]" but got "[object Object]"`
 
 ## Config
 #### TouchEmulator.template = Function(touch)
