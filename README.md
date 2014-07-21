@@ -36,13 +36,11 @@ Also, the script includes polyfills for `document.createTouch` and `document.cre
 The script has been tested with the [w3c web platform tests](/tests/web-platform-tests/touch-events) and passes almost all except;
 - *assert_true: The touchstart event must be dispatched before any mouse events. (If this fails, 
 it might mean that the user agent does not implement W3C touch events at all.) expected true got false*
-  - This is because we can only trigger touch events AFTER a mouse event has occured.
+  - This is because we can only trigger touch events AFTER a mouse event has occurred.
 - *assert_true: event is a TouchEvent event expected true got false*
   - We trigger an event of the type `Event`
-- *assert_equals: attribute of type TouchList expected "[object TouchList]" but got "[object Object]"*
-  - Non native classes always return this type when calling `Object.prototype.toString.call(obj)`.
-- *assert_equals: attribute of type TouchList expected "[object Touch]" but got "[object Object]"*
-  - Non native classes always return this type when calling `Object.prototype.toString.call(obj)`.
+- *assert_equals: attribute of type TouchList expected "[object TouchList]" but got "[object Array]"*
+- *assert_equals: attribute of type TouchList expected "[object Touch]" but got "[object Array]"*
 
 ## Config
 #### TouchEmulator.template = Function(touch)
