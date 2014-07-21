@@ -41,8 +41,8 @@ it might mean that the user agent does not implement W3C touch events at all.) e
   - We trigger an event of the type `Event`
 - *assert_equals: touch list is of type TouchList expected "[object TouchList]" but got "[object Array]"*
 - *assert_equals: touch is of type Touch expected "[object Touch]" but got "[object Object]"*
-- 
-## Config
+
+## Options
 #### TouchEmulator.template = Function(touch)
 Change the css properties of the rendered touches.
 
