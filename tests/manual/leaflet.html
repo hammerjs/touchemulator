@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../../touch-emulator.js"></script>
+    <script> TouchEmulator(); </script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+</head>
+<body>
+
+    <div id="map" style="height: 500px;"></div>
+    <script>
+        // create a map in the "map" div, set the view to a given place and zoom
+        var map = L.map('map', { boxZoom: false}).setView([51.98, 5.91], 13);
+
+        // add an OpenStreetMap tile layer
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    </script>
+
+</body>
+</html>
