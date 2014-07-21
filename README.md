@@ -32,12 +32,16 @@ document.body.addEventListener('touchend', log, false);
 
 Also, the script includes polyfills for `document.createTouch` and `document.createTouchList`.
 
-The script has been tested with the w3c web platform tests and passes almost all except;
-- `assert_true: The touchstart event must be dispatched before any mouse events. (If this fails, 
-it might mean that the user agent does not implement W3C touch events at all.) expected true got false`
-- `assert_true: event is a TouchEvent event expected true got false`
-- `assert_equals: attribute of type TouchList expected "[object TouchList]" but got "[object Object]"`
-- `assert_equals: attribute of type TouchList expected "[object Touch]" but got "[object Object]"`
+The script has been tested with the [w3c web platform tests](/tests/web-platform-tests) and passes almost all except;
+- *assert_true: The touchstart event must be dispatched before any mouse events. (If this fails, 
+it might mean that the user agent does not implement W3C touch events at all.) expected true got false*
+  - This is because we can only trigger touch events AFTER a mouse event has occured.
+- *assert_true: event is a TouchEvent event expected true got false*
+  - We trigger an event of the type `Event`
+- *assert_equals: attribute of type TouchList expected "[object TouchList]" but got "[object Object]"*
+  - Non native classes always return this type when calling `Object.prototype.toString.call(obj)`.
+- *assert_equals: attribute of type TouchList expected "[object Touch]" but got "[object Object]"*
+  - Non native classes always return this type when calling `Object.prototype.toString.call(obj)`.
 
 ## Config
 #### TouchEmulator.template = Function(touch)
