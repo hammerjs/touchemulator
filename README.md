@@ -4,6 +4,9 @@ Touch Emulator
 Emulate touch input on your desktop. Tries to fire touch events as 
 [specified by W3C](http://www.w3.org/TR/touch-events). Press the `shift` key to enable multi-touch!
 
+- [Example with Hammer.js](https://cdn.rawgit.com/hammerjs/touchemulator/master/tests/manual/hammer.html)
+- [Example with Leaflet Maps](https://cdn.rawgit.com/hammerjs/touchemulator/master/tests/manual/leaflet.html)
+
 ## Install
 Download the script from this repo, or just run `bower install hammer-touchemulator`.
 
@@ -26,9 +29,8 @@ document.body.addEventListener('touchmove', log, false);
 document.body.addEventListener('touchend', log, false);
 ````
 
-## Config
-Little configuration is possible...
 
+## Config
 #### TouchEmulator.template = Function(touch)
 Change the css properties of the rendered touches.
 
