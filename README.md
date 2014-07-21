@@ -33,7 +33,7 @@ document.body.addEventListener('touchend', log, false);
 Also, the script includes polyfills for `document.createTouch` and `document.createTouchList`.
 
 ## Web platform tests
-The script has been tested with the [w3c web platform tests](/tests/web-platform-tests/touch-events) and passes almost all except;
+The script has been tested with the [w3c web platform tests](/tests/web-platform-tests/touch-events) and passes all tests,  except these;
 - *assert_true: The touchstart event must be dispatched before any mouse events. (If this fails, 
 it might mean that the user agent does not implement W3C touch events at all.) expected true got false*
   - This is because we can only trigger touch events AFTER a mouse event has occurred.
