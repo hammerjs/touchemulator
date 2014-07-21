@@ -59,6 +59,7 @@
                 eventTarget = ev.target;
             }
 
+            // shiftKey has been lost, so trigger a touchend
             if (isMultiTouch && !ev.shiftKey) {
                 triggerTouch('touchend', ev);
                 isMultiTouch = false;
@@ -66,6 +67,7 @@
 
             triggerTouch(touchType, ev);
 
+            // we're entering the multi-touch mode!
             if (!isMultiTouch && ev.shiftKey) {
                 isMultiTouch = true;
                 multiTouchStartPos = {
@@ -79,9 +81,11 @@
                 triggerTouch('touchstart', ev);
             }
 
+            // reset
             if (ev.type == 'mouseup') {
                 multiTouchStartPos = null;
                 isMultiTouch = false;
+                eventTarget = null;
             }
         }
     }
@@ -106,12 +110,17 @@
         eventTarget.dispatchEvent(touchEvent);
     }
 
+    /**
+     * create empty touchlist with the methods
+     * @returns {Array}
+     */
     function createEmptyTouchList() {
         var touchList = [];
         touchList.item = function(index) {
             return touchList[index];
         };
 
+        // specified by Mozilla
         touchList.identifiedTouch = function(id) {
             return touchList[id + 1];
         };
