@@ -54,7 +54,8 @@
 
             // The EventTarget on which the touch point started when it was first placed on the surface,
             // even if the touch point has since moved outside the interactive area of that element.
-            if (ev.type == 'mousedown') {
+            // also, when the target doesnt exist anymore, we update it
+            if (ev.type == 'mousedown' || !eventTarget || (eventTarget && !eventTarget.parentNode)) {
                 eventTarget = ev.target;
             }
 
