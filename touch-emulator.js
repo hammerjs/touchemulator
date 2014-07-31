@@ -125,13 +125,12 @@
      */
     function onMouse(touchType) {
         return function(ev) {
+            // prevent mouse events
+            preventMouseEvents(ev);
+
             if (ev.which !== 1) {
                 return;
             }
-
-            // prevent mouseevents
-            preventMouseEvents(ev);
-
 
             // The EventTarget on which the touch point started when it was first placed on the surface,
             // even if the touch point has since moved outside the interactive area of that element.

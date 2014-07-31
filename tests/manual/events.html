@@ -10,20 +10,24 @@
 <body>
 
     <div id="hitarea" style="background: silver; height: 400px;">
-            check the console
+            Check the console. No mouseevents should be fired, only touchevents.
     </div>
 
     <script>
 
         function log(ev) {
-            console.log(ev);
+            console.log(ev.type, ev);
         }
 
         var hitarea = document.getElementById('hitarea');
-        hitarea.addEventListener("touchstart", log, false);
-        hitarea.addEventListener("touchmove", log, false);
-        hitarea.addEventListener("touchend", log, false);
-        hitarea.addEventListener("touchcancel", log, false);
+
+        var events = ['touchstart','touchmove','touchend','touchcancel',
+                        'mousedown','mouseenter','mouseleave','mousemove',
+                        'mouseout','mouseover','mouseup','mousewheel'];
+
+        for(var i=0; i<events.length; i++) {
+            hitarea.addEventListener(events[i], log, false);
+        }
 
     </script>
 
