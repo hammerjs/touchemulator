@@ -1,8 +1,8 @@
 Touch Emulator
 ========
 
-Emulate touch input on your desktop. Tries to fire touch events as 
-[specified by W3C](http://www.w3.org/TR/touch-events). Press the `shift` key to enable multi-touch!
+Emulate multi-touch input on your desktop. Triggers touch events as
+[specified by W3C](http://www.w3.org/TR/touch-events). Press the `shift` key to pinch and rotate!
 
 - [Example with Hammer.js](http://rawgit.com/hammerjs/touchemulator/master/tests/manual/hammer.html)
 - [Example with Leaflet Maps](http://rawgit.com/hammerjs/touchemulator/master/tests/manual/leaflet.html)
