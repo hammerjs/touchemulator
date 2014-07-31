@@ -38,7 +38,7 @@ has the `shiftKey` property to `true`, it enables multi-touch.
 
 The script also prevents all mouse events on the page, so only the touch events will be emitted to your page.
 It prevents futher emitting of the following events. 
-`mousedown`, `mouseenter`, `mouseleave`, `mousemove`, `mouseout`, `mouseover`, `mouseup`, `mousewheel`.
+`mousedown`, `mouseenter`, `mouseleave`, `mousemove`, `mouseout`, `mouseover`, `mouseup`.
 
 ## Web platform tests
 The script has been tested with the [w3c web platform tests](/tests/web-platform-tests/touch-events) and passes all tests,  except these;

@@ -305,7 +305,6 @@
         window.addEventListener("mouseleave", preventMouseEvents, true);
         window.addEventListener("mouseout", preventMouseEvents, true);
         window.addEventListener("mouseover", preventMouseEvents, true);
-        window.addEventListener("mousewheel", preventMouseEvents, true);
 
         // it uses itself!
         window.addEventListener("touchstart", showTouches, false);
