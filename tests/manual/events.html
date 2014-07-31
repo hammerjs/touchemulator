@@ -10,7 +10,7 @@
 <body>
 
     <div id="hitarea" style="background: silver; height: 400px;">
-            Check the console. No mouseevents should be fired, only touchevents.
+            Check the console. No mouseevents should be fired, only touchevents. Click events are allowed.
     </div>
 
     <script>
@@ -23,13 +23,13 @@
 
         var events = ['touchstart','touchmove','touchend','touchcancel',
                         'mousedown','mouseenter','mouseleave','mousemove',
-                        'mouseout','mouseover','mouseup','mousewheel'];
+                        'mouseout','mouseover','mouseup','mousewheel',
+                        'click'];
 
         for(var i=0; i<events.length; i++) {
             hitarea.addEventListener(events[i], log, false);
         }
 
     </script>
-
 </body>
 </html>
