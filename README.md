@@ -6,7 +6,7 @@ Emulate touch input on your desktop. Tries to fire touch events as
 
 - [Example with Hammer.js](http://rawgit.com/hammerjs/touchemulator/master/tests/manual/hammer.html)
 - [Example with Leaflet Maps](http://rawgit.com/hammerjs/touchemulator/master/tests/manual/leaflet.html)
-- [View webpage](http://hammerjs.github.io/touch-emulator.html)
+- [View webpage](http://hammerjs.github.io/touch-emulator)
 
 ## Install
 Download the script from this repo, or just run `bower install hammer-touchemulator`.
