@@ -32,11 +32,16 @@ document.body.addEventListener('touchend', log, false);
 
 Also, the script includes polyfills for `document.createTouch` and `document.createTouchList`.
 
+## How it works
+It listens to the `mousedown`, `mousemove` and `mouseup` events, and translates them to touch events. If the mouseevent
+has the `shiftKey` property to `true`, it enables multi-touch. 
+
+The script also prevents all mouse events on the page, so only the touch events will be emitted to your page.
+It prevents futher emitting of the following events. 
+`mousedown`, `mouseenter`, `mouseleave`, `mousemove`, `mouseout`, `mouseover`, `mouseup`, `mousewheel`.
+
 ## Web platform tests
 The script has been tested with the [w3c web platform tests](/tests/web-platform-tests/touch-events) and passes all tests,  except these;
-- *assert_true: The touchstart event must be dispatched before any mouse events. (If this fails, 
-it might mean that the user agent does not implement W3C touch events at all.) expected true got false*
-  - This is because we can only trigger touch events AFTER a mouse event has occurred.
 - *assert_true: event is a TouchEvent event expected true got false*
   - We trigger an event of the type `Event`
 - *assert_equals: touch list is of type TouchList expected "[object TouchList]" but got "[object Array]"*

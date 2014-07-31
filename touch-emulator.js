@@ -110,6 +110,15 @@
     }
 
     /**
+     * disable mouseevents on the page
+     * @param ev
+     */
+    function preventMouseEvents(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+    }
+
+    /**
      * only trigger touches when the left mousebutton has been pressed
      * @param touchType
      * @returns {Function}
@@ -119,6 +128,10 @@
             if (ev.which !== 1) {
                 return;
             }
+
+            // prevent mouseevents
+            preventMouseEvents(ev);
+
 
             // The EventTarget on which the touch point started when it was first placed on the surface,
             // even if the touch point has since moved outside the interactive area of that element.
@@ -285,9 +298,15 @@
 
         fakeTouchSupport();
 
-        window.addEventListener("mousedown", onMouse('touchstart'), false);
-        window.addEventListener("mousemove", onMouse('touchmove'), false);
-        window.addEventListener("mouseup", onMouse('touchend'), false);
+        window.addEventListener("mousedown", onMouse('touchstart'), true);
+        window.addEventListener("mousemove", onMouse('touchmove'), true);
+        window.addEventListener("mouseup", onMouse('touchend'), true);
+
+        window.addEventListener("mouseenter", preventMouseEvents, true);
+        window.addEventListener("mouseleave", preventMouseEvents, true);
+        window.addEventListener("mouseout", preventMouseEvents, true);
+        window.addEventListener("mouseover", preventMouseEvents, true);
+        window.addEventListener("mousewheel", preventMouseEvents, true);
 
         // it uses itself!
         window.addEventListener("touchstart", showTouches, false);
