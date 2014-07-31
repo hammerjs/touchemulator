@@ -47,6 +47,11 @@ The script has been tested with the [w3c web platform tests](/tests/web-platform
 - *assert_equals: touch list is of type TouchList expected "[object TouchList]" but got "[object Array]"*
 - *assert_equals: touch is of type Touch expected "[object Touch]" but got "[object Object]"*
 
+## Bookmarklet
+````js
+javascript:!function(a){var b=a.createElement("script");b.onload=function(){TouchEmulator()},b.src="http://cdn.rawgit.com/hammerjs/touchemulator/0.0.2/touch-emulator.js",a.body.appendChild(b)}(document);
+````
+
 ## Options
 #### TouchEmulator.template = Function(touch)
 Change the css properties of the rendered touches.
