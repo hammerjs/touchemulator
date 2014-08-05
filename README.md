@@ -36,8 +36,7 @@ Also, the script includes polyfills for `document.createTouch` and `document.cre
 It listens to the `mousedown`, `mousemove` and `mouseup` events, and translates them to touch events. If the mouseevent
 has the `shiftKey` property to `true`, it enables multi-touch. 
 
-The script also prevents all mouse events on the page, so only the touch events will be emitted to your page.
-The prevented mouse events: 
+The script also prevents the following mouse events on the page: 
 `mousedown`, `mouseenter`, `mouseleave`, `mousemove`, `mouseout`, `mouseover` and `mouseup`.
 
 ## Web platform tests
