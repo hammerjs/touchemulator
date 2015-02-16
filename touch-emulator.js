@@ -319,7 +319,7 @@
     TouchEmulator.multiTouchOffset = 75;
 
     // tags that shouldn't swallow mouse events
-    TouchEmulator.ignoreTags = ['TEXTAREA', 'INPUT'];
+    TouchEmulator.ignoreTags = ['TEXTAREA', 'INPUT', 'SELECT'];
 
     /**
      * css template for the touch rendering
