@@ -58,4 +58,5 @@ Change the css properties of the rendered touches.
 #### TouchEmulator.multiTouchOffset = 75
 The distance between the two touch points when entering the *multi-touch zone*.
 
-
+#### TouchEmulator.ignoreTags = [...]
+The names of HTML tags that shouldn't swallow mouse events (default: `['TEXTAREA', 'INPUT']`).
