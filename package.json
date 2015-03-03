@@ -1,0 +1,29 @@
+{
+  "name": "hammer-touchemulator",
+  "version": "0.0.2",
+  "description": "Emulate touch input on your desktop.",
+  "main": "touch-emulator.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hammerjs/touchemulator"
+  },
+  "keywords": [
+    "touch",
+    "hammerjs",
+    "input",
+    "emulator",
+    "simulator"
+  ],
+  "author": "Jorik Tangelder <j.tangelder@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hammerjs/touchemulator/issues"
+  },
+  "homepage": "https://github.com/hammerjs/touchemulator"
+}

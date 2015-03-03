@@ -9,7 +9,17 @@ Emulate multi-touch input on your desktop. Triggers touch events as
 - [View webpage](http://hammerjs.github.io/touch-emulator)
 
 ## Install
-Download the script from this repo, or just run `bower install hammer-touchemulator`.
+Download the script from this repo, via Bower:
+
+```bash
+bower install hammer-touchemulator
+```
+
+or NPM:
+
+```bash
+npm install hammer-touchemulator
+```
 
 ## How to use
 Include the javascript file, and call the `Emulator()` function before any other libraries that do something with the 
