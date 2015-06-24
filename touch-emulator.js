@@ -307,10 +307,10 @@
         window.addEventListener("mouseover", preventMouseEvents, true);
 
         // it uses itself!
-        window.addEventListener("touchstart", showTouches, false);
-        window.addEventListener("touchmove", showTouches, false);
-        window.addEventListener("touchend", showTouches, false);
-        window.addEventListener("touchcancel", showTouches, false);
+        window.addEventListener("touchstart", showTouches, true);
+        window.addEventListener("touchmove", showTouches, true);
+        window.addEventListener("touchend", showTouches, true);
+        window.addEventListener("touchcancel", showTouches, true);
     }
 
     // start distance when entering the multitouch mode
@@ -344,7 +344,8 @@
             userSelect: 'none',
             webkitTransform: transform,
             mozTransform: transform,
-            transform: transform
+            transform: transform,
+            zIndex: 100
         }
     };
 
