@@ -390,6 +390,14 @@
 
     var timer = null;
     function notifyChange(message) {
+        
+        if (!window.jQuery) {
+            
+            console.log(message);
+            return;
+            
+        }
+        
         if (!$('#touch-emulator-notify').length) {
             var el = $('<div id="touch-emulator-notify" style="display:none;"><span></span></div>');
             $('body').append(el);
@@ -453,11 +461,7 @@
             TouchEmulator.multiTouchType = types[selected];
             var message = types[selected];
 
-            if (window.jQuery) {
-                notifyChange(message);
-            } else {
-                alert(message);
-            }
+            notifyChange(message);
 
         }
 
