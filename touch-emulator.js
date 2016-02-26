@@ -2,6 +2,8 @@
     "use strict";
 
     var isMultiTouch = false;
+    var previousRotationAngle = 0;
+    var rotateAngleCache = 0;
     var multiTouchStartPos;
     var eventTarget;
     var touchElements = {};
@@ -163,6 +165,7 @@
 
             // reset
             if (ev.type == 'mouseup') {
+                previousRotationAngle = (rotateAngleCache % 10) || 0;
                 multiTouchStartPos = null;
                 isMultiTouch = false;
                 eventTarget = null;
@@ -198,14 +201,50 @@
      */
     function createTouchList(mouseEv) {
         var touchList = new TouchList();
+        var type = TouchEmulator.multiTouchType;
+        var threeFingers = mouseEv.altKey;
 
         if (isMultiTouch) {
+            
             var f = TouchEmulator.multiTouchOffset;
-            var deltaX = multiTouchStartPos.pageX - mouseEv.pageX;
-            var deltaY = multiTouchStartPos.pageY - mouseEv.pageY;
+            var x = TouchEmulator.multiTouchOffsetX || f;
+            var y = TouchEmulator.multiTouchOffsetY || f;
 
-            touchList.push(new Touch(eventTarget, 1, multiTouchStartPos, (deltaX*-1) - f, (deltaY*-1) + f));
-            touchList.push(new Touch(eventTarget, 2, multiTouchStartPos, deltaX+f, deltaY-f));
+            switch(TouchEmulator.multiTouchType) {
+
+                case 'vertical' :
+                    touchList.push(new Touch(eventTarget, 1, mouseEv, 0, 0));
+                    touchList.push(new Touch(eventTarget, 2, mouseEv, TouchEmulator.multiTouchOffsetX || 0, y));
+                    if (threeFingers) {
+                        touchList.push(new Touch(eventTarget, 3, mouseEv, (TouchEmulator.multiTouchOffsetX || 0) * 2, y*2));
+                    }
+                    break; 
+
+                case 'horizontal' :
+                    touchList.push(new Touch(eventTarget, 1, mouseEv, 0, 0));
+                    touchList.push(new Touch(eventTarget, 2, mouseEv, x, TouchEmulator.multiTouchOffsetY || 0));
+                    if (threeFingers) {
+                        touchList.push(new Touch(eventTarget, 3, mouseEv, x*2, (TouchEmulator.multiTouchOffsetY || 0) * 2));
+                    }
+                    break; 
+
+                case 'rotate' :
+                    var deltaY = multiTouchStartPos.pageY - mouseEv.pageY;
+                    var circleResolution = 0.05;
+                    var angle = rotateAngleCache = previousRotationAngle + (deltaY * circleResolution);
+
+                    touchList.push(new Touch(eventTarget, 1, multiTouchStartPos, f * Math.sin(angle), f * Math.cos(angle) ));
+                    touchList.push(new Touch(eventTarget, 2, multiTouchStartPos, -1 * f * Math.sin(angle), -1 * f * Math.cos(angle) ));
+                    break; 
+
+                case 'pinch':
+                default:
+                    var deltaX = multiTouchStartPos.pageX - mouseEv.pageX;
+                    var deltaY = multiTouchStartPos.pageY - mouseEv.pageY;
+                    touchList.push(new Touch(eventTarget, 1, multiTouchStartPos, (deltaX*-1) - f, (deltaY*-1) + f));
+                    touchList.push(new Touch(eventTarget, 2, multiTouchStartPos, deltaX+f, deltaY-f));
+                break;
+            }
         } else {
             touchList.push(new Touch(eventTarget, 1, mouseEv, 0, 0));
         }
@@ -348,6 +387,81 @@
             zIndex: 100
         }
     };
+
+    var timer = null;
+    function notifyChange(message) {
+        if (!$('#touch-emulator-notify').length) {
+            var el = $('<div id="touch-emulator-notify" style="display:none;"><span></span></div>');
+            $('body').append(el);
+            el.css({
+                width         : '300px',
+                height        : '100px',
+                background    : '#ccc',
+                opacity       : 0.9,
+                position      : 'fixed',
+                'line-height' : '100%',
+                padding       : '1em',
+                left          : '50%',
+                top           : '50%',
+                'margin-left' : -300/2,
+                'margin-top'  : -100/2,
+                'text-align'  : 'center',
+                'display'     : 'table'
+
+            });
+            el.find('span').css({
+                'vertical-align': 'middle',
+                display         : 'table-cell',
+                'font-family'   : '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif',
+                'font-weight'   : 300,
+                'font-size'     : '35px'
+            });
+
+
+        }
+        var notifyContainer = $('#touch-emulator-notify');
+        var messageContainer = notifyContainer.find('span');
+        messageContainer.text(message);
+
+        clearTimeout(timer);
+        notifyContainer.stop().fadeIn();
+
+        timer = setTimeout(function(){
+            notifyContainer.fadeOut();
+        }, 500);
+    }
+
+    var types = ['vertical', 'horizontal', 'rotate', 'pinch'];
+    var selected = 3;
+
+    document.addEventListener('keydown', function(event) {
+
+        if(event.keyCode == 38) { // 'up arrow' key
+
+             TouchEmulator.multiTouchOffset += 5;
+             notifyChange('offset: ' + TouchEmulator.multiTouchOffset);
+
+        } else if(event.keyCode == 40) { // 'down arrow' key
+
+             TouchEmulator.multiTouchOffset -= 5;
+             notifyChange('offset: ' + TouchEmulator.multiTouchOffset);
+
+        } else if(event.keyCode == 84) { // 't' key
+
+            selected = (selected + 1) % types.length;
+
+            TouchEmulator.multiTouchType = types[selected];
+            var message = types[selected];
+
+            if (window.jQuery) {
+                notifyChange(message);
+            } else {
+                alert(message);
+            }
+
+        }
+
+    });
 
     // export
     if (typeof define == "function" && define.amd) {
