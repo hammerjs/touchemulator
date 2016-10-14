@@ -119,6 +119,20 @@
     }
 
     /**
+     * check if left mouse pressed
+     * @returns {boolean}
+     */
+    function detectLeftButton(ev) {
+        if ('buttons' in ev) {
+            return ev.buttons === 1;
+        } else if ('which' in ev) {
+            return ev.which === 1;
+        } else {
+            return ev.button === 1;
+        }
+    }
+
+    /**
      * only trigger touches when the left mousebutton has been pressed
      * @param touchType
      * @returns {Function}
@@ -128,7 +142,7 @@
             // prevent mouse events
             preventMouseEvents(ev);
 
-            if (ev.which !== 1) {
+            if (!detectLeftButton(ev) && ev.type != 'mouseup') {
                 return;
             }
 
