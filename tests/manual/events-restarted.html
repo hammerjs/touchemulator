@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../../touch-emulator.js"></script>
+    <script> TouchEmulator.start(); </script>
+</head>
+<body>
+
+    <div id="hitarea" style="background: silver; height: 400px;">
+        Check the console. No mouse events should be fired, only touch events. Click events are allowed.
+    </div>
+
+    <script>
+
+        function log(ev) {
+            console.log(ev.type, ev);
+        }
+
+        var hitarea = document.getElementById('hitarea');
+
+        var events = ['touchstart','touchmove','touchend','touchcancel',
+                        'mousedown','mouseenter','mouseleave','mousemove',
+                        'mouseout','mouseover','mouseup','mousewheel',
+                        'click'];
+
+        for(var i=0; i<events.length; i++) {
+            hitarea.addEventListener(events[i], log, false);
+        }
+
+        TouchEmulator.stop();
+        TouchEmulator.start();
+    </script>
+</body>
+</html>
