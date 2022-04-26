@@ -125,8 +125,10 @@
      */
     function onMouse(touchType) {
         return function(ev) {
-            // prevent mouse events
-            preventMouseEvents(ev);
+            if (TouchEmulator.ignoreTags.indexOf(ev.target.tagName) < 0) {
+                // prevent mouse events
+                preventMouseEvents(ev);
+            }
 
             if (ev.which !== 1) {
                 return;
@@ -315,6 +317,9 @@
 
     // start distance when entering the multitouch mode
     TouchEmulator.multiTouchOffset = 75;
+
+    // tags that shouldn't swallow mouse events
+    TouchEmulator.ignoreTags = ['TEXTAREA', 'INPUT', 'SELECT'];
 
     /**
      * css template for the touch rendering
