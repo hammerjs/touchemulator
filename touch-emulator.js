@@ -138,7 +138,11 @@
             // even if the touch point has since moved outside the interactive area of that element.
             // also, when the target doesnt exist anymore, we update it
             if (ev.type == 'mousedown' || !eventTarget || (eventTarget && !eventTarget.dispatchEvent)) {
-                eventTarget = ev.target;
+                if(ev.composedPath() && ev.composedPath().length > 0){
+                    eventTarget = ev.composedPath()[0]
+                }else {
+                    eventTarget = ev.target;
+                }
             }
 
             // shiftKey has been lost, so trigger a touchend
