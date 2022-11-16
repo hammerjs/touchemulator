@@ -4,6 +4,7 @@
     var isMultiTouch = false;
     var multiTouchStartPos;
     var eventTarget;
+    var eventTargetList = [];
     var touchElements = {};
 
     // polyfills
@@ -142,32 +143,30 @@
                 var composedPathList = ev.composedPath();
                 // Emulating event bubble from composedPath()[0] to ev.target for DOMs inside Web Components . 
                 if(composedPathList.length > 0){
-                    for(var i = 0; i < composedPathList.length; i=i+1){
-                        if(composedPathList[i] != ev.target){
-                            eventTarget = composedPathList[i];
-                            processTriggerForOneElement(ev, touchType)
-                        }else{
-                            eventTarget = null;
-                            break;
-                        }
+                    if(eventTargetList.length === 0 || eventTargetList.indexOf(composedPathList[0]) !== -1){
+                        eventTargetList.push(composedPathList[0])
+                    }
+            
+                    for(var j = 0; j < eventTargetList.length; j = j+1){
+                        processTriggerForOneElement(ev, touchType, eventTargetList[j])
                     }
                 } else {
                     eventTarget = ev.target;
-                    processTriggerForOneElement(ev, touchType)
+                    processTriggerForOneElement(ev, touchType, eventTarget)
                 }
             }
 
         }
     }
 
-    function processTriggerForOneElement(ev, touchType){
+    function processTriggerForOneElement(ev, touchType, eventTarget){
             // shiftKey has been lost, so trigger a touchend
             if (isMultiTouch && !ev.shiftKey) {
-                triggerTouch('touchend', ev);
+                triggerTouch('touchend', ev, eventTarget);
                 isMultiTouch = false;
             }
 
-            triggerTouch(touchType, ev);
+            triggerTouch(touchType, ev, eventTarget);
 
             // we're entering the multi-touch mode!
             if (!isMultiTouch && ev.shiftKey) {
@@ -180,7 +179,7 @@
                     screenX: ev.screenX,
                     screenY: ev.screenY
                 };
-                triggerTouch('touchstart', ev);
+                triggerTouch('touchstart', ev, eventTarget);
             }
 
             // reset
@@ -188,6 +187,7 @@
                 multiTouchStartPos = null;
                 isMultiTouch = false;
                 eventTarget = null;
+                eventTargetList = [];
             }
     }
 
@@ -196,7 +196,7 @@
      * @param eventName
      * @param mouseEv
      */
-    function triggerTouch(eventName, mouseEv) {
+    function triggerTouch(eventName, mouseEv, eventTarget) {
         var touchEvent = document.createEvent('Event');
         touchEvent.initEvent(eventName, true, true);
 
