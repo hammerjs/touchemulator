@@ -137,14 +137,30 @@
             // The EventTarget on which the touch point started when it was first placed on the surface,
             // even if the touch point has since moved outside the interactive area of that element.
             // also, when the target doesnt exist anymore, we update it
+
             if (ev.type == 'mousedown' || !eventTarget || (eventTarget && !eventTarget.dispatchEvent)) {
-                if(ev.composedPath() && ev.composedPath().length > 0){
-                    eventTarget = ev.composedPath()[0]
-                }else {
+                var composedPathList = ev.composedPath();
+                // Emulating event bubble from composedPath()[0] to ev.target for DOMs inside Web Components . 
+                if(composedPathList.length > 0){
+                    for(var i = 0; i < composedPathList.length; i=i+1){
+                        if(composedPathList[i] != ev.target){
+                            eventTarget = composedPathList[i];
+                            processTriggerForOneElement(ev, touchType)
+                        }else{
+                            eventTarget = null;
+                            break;
+                        }
+                    }
+                } else {
                     eventTarget = ev.target;
+                    processTriggerForOneElement(ev, touchType)
                 }
             }
 
+        }
+    }
+
+    function processTriggerForOneElement(ev, touchType){
             // shiftKey has been lost, so trigger a touchend
             if (isMultiTouch && !ev.shiftKey) {
                 triggerTouch('touchend', ev);
@@ -173,7 +189,6 @@
                 isMultiTouch = false;
                 eventTarget = null;
             }
-        }
     }
 
     /**
