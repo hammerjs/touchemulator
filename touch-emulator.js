@@ -143,8 +143,12 @@
                 var composedPathList = ev.composedPath();
                 // Emulating event bubble from composedPath()[0] to ev.target for DOMs inside Web Components . 
                 if(composedPathList.length > 0){
-                    if(eventTargetList.length === 0 || eventTargetList.indexOf(composedPathList[0]) !== -1){
-                        eventTargetList.push(composedPathList[0])
+                    for(var i = 0; i < composedPathList.length; i = i+1){
+                        if(composedPathList[i]!==ev.target && (eventTargetList.length === 0 || eventTargetList.indexOf(composedPathList[i]) === -1 )){
+                          eventTargetList.push(composedPathList[i])
+                        } else {
+                          break;
+                        }
                     }
             
                     for(var j = 0; j < eventTargetList.length; j = j+1){
