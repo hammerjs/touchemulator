@@ -10,7 +10,7 @@
 <body>
 
     <div id="hitarea" style="background: silver; height: 400px;">
-            Check the console. No mouse events should be fired, only touch events. Click events are allowed.
+        Check the console. No mouse events should be fired, only touch events. Click events are allowed.
     </div>
 
     <script>
@@ -30,6 +30,8 @@
             hitarea.addEventListener(events[i], log, false);
         }
 
+        TouchEmulator.stop();
+        TouchEmulator.start();
     </script>
 </body>
 </html>
